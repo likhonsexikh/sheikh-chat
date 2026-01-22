@@ -49,5 +49,5 @@ USER user
 EXPOSE 3000
 
 # The base image's entrypoint will run, starting the sandbox services.
-# To run your application, start this container and then run:
-# docker exec <container_id> node /home/user/app/backend/index.js
+# Start the Node.js application
+CMD ["node", "backend/index.js"]
