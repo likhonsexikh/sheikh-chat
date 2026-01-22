@@ -1,20 +1,37 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-jammy
+# Use the inglebard/ubuntu-sandbox image as the base
+FROM inglebard/ubuntu-sandbox
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Switch to the root user to install software
+USER root
 
-# Copy package.json and package-lock.json to the working directory
+# Install Node.js
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Set the working directory for the application
+WORKDIR /home/user/app
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install any needed packages
+# Install app dependencies
 RUN npm install
 
-# Bundle app source
+# Copy the rest of the application source code
 COPY . .
 
-# Make port 3000 available to the world outside this container
+# Change the owner of the app directory to the 'user' user
+RUN chown -R user:user /home/user/app
+
+# Switch back to the standard user
+USER user
+
+# Expose the port for the Node.js application
 EXPOSE 3000
 
-# Define the command to run the app
-CMD [ "npm", "start" ]
+# The base image's entrypoint will run, starting the sandbox services.
+# To run your application, start this container and then run:
+# docker exec <container_id> node /home/user/app/your-main-file.js
+# or whatever your start command is.
