@@ -1,20 +1,53 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-jammy
+# Stage 1: Build the React frontend
+FROM node:18-jammy as builder
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Copy frontend package files and install dependencies
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
 
-# Install any needed packages
-RUN npm install
+# Copy the rest of the frontend source code
+COPY frontend/ ./frontend/
 
-# Bundle app source
-COPY . .
+# Build the frontend
+RUN cd frontend && npm run build
 
-# Make port 3000 available to the world outside this container
+
+# Stage 2: Setup the production environment
+FROM inglebard/ubuntu-sandbox
+
+# Switch to the root user to install software
+USER root
+
+# Install Node.js
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Set the working directory for the application
+WORKDIR /home/user/app
+
+# Copy backend package files and install dependencies
+COPY backend/package*.json ./backend/
+RUN cd backend && npm install --production
+
+# Copy the backend source code
+COPY backend/ ./backend/
+
+# Copy the built frontend from the builder stage
+COPY --from=builder /app/frontend/dist ./frontend/dist
+
+# Change the owner of the app directory to the 'user' user
+RUN chown -R user:user /home/user/app
+
+# Switch back to the standard user
+USER user
+
+# Expose the port for the Node.js application
 EXPOSE 3000
 
-# Define the command to run the app
-CMD [ "npm", "start" ]
+# The base image's entrypoint will run, starting the sandbox services.
+# To run your application, start this container and then run:
+# docker exec <container_id> node /home/user/app/backend/index.js
