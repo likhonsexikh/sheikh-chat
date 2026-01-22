@@ -1,4 +1,20 @@
-# Use the inglebard/ubuntu-sandbox image as the base
+# Stage 1: Build the React frontend
+FROM node:18-jammy as builder
+
+WORKDIR /app
+
+# Copy frontend package files and install dependencies
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
+
+# Copy the rest of the frontend source code
+COPY frontend/ ./frontend/
+
+# Build the frontend
+RUN cd frontend && npm run build
+
+
+# Stage 2: Setup the production environment
 FROM inglebard/ubuntu-sandbox
 
 # Switch to the root user to install software
@@ -13,14 +29,15 @@ RUN apt-get update && \
 # Set the working directory for the application
 WORKDIR /home/user/app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy backend package files and install dependencies
+COPY backend/package*.json ./backend/
+RUN cd backend && npm install --production
 
-# Install app dependencies
-RUN npm install
+# Copy the backend source code
+COPY backend/ ./backend/
 
-# Copy the rest of the application source code
-COPY . .
+# Copy the built frontend from the builder stage
+COPY --from=builder /app/frontend/dist ./frontend/dist
 
 # Change the owner of the app directory to the 'user' user
 RUN chown -R user:user /home/user/app
@@ -33,5 +50,4 @@ EXPOSE 3000
 
 # The base image's entrypoint will run, starting the sandbox services.
 # To run your application, start this container and then run:
-# docker exec <container_id> node /home/user/app/your-main-file.js
-# or whatever your start command is.
+# docker exec <container_id> node /home/user/app/backend/index.js
