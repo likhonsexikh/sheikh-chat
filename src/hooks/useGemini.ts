@@ -1,7 +1,5 @@
 import { useState, useCallback } from 'react';
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+import { auth } from '../firebase';
 
 export const useGemini = () => {
     const [loading, setLoading] = useState(false);
@@ -12,35 +10,37 @@ export const useGemini = () => {
         onFinish: () => void,
         onError: (err: any) => void
     ) => {
-        if (!API_KEY || API_KEY.includes('INSERT')) {
-            onError(new Error("Gemini API Key is missing in .env.local"));
-            return;
-        }
-
         setLoading(true);
         try {
-            const genAI = new GoogleGenerativeAI(API_KEY);
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-            // Convert history to Gemini format (excluding the last message which is the prompt)
-            const history = messages.slice(0, -1).map(msg => ({
-                role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.content }],
-            }));
-
-            const lastMessage = messages[messages.length - 1];
-
-            const chat = model.startChat({
-                history: history,
-            });
-
-            const result = await chat.sendMessageStream(lastMessage.content);
-
-            for await (const chunk of result.stream) {
-                const chunkText = chunk.text();
-                onChunk(chunkText);
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                throw new Error("User not authenticated");
             }
 
+            const token = await currentUser.getIdToken();
+
+            const response = await fetch('/api/gemini/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    messages,
+                    userId: currentUser.uid
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Simulate streaming for now (since we're using functions)
+            // In a real implementation, you'd use Server-Sent Events or WebSockets
+            const fullResponse = data.response;
+            onChunk(fullResponse);
             onFinish();
         } catch (error) {
             console.error("Gemini Error:", error);

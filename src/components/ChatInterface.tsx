@@ -4,11 +4,11 @@ import { UserOutlined, RobotOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, Button, message, theme } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 import { useGemini } from '../hooks/useGemini';
-// Import markdown renderer (basic setup/placeholder as x-markdown might need specific config)
-// Note: In real setup, we would use <Markdown /> from @ant-design/x-markdown within Bubble
-// For this demo, let's assume Bubble handles basic text or we just pass text.
 
 const { Header, Content, Footer } = Layout;
+
+// Cast Bubble to any to avoid type check issues with 'avatar' prop in Beta/RC versions
+const XBubble = Bubble as any;
 
 interface Message {
     id: string;
@@ -86,11 +86,10 @@ const ChatInterface: React.FC = () => {
                 gap: 16
             }}>
                 {messages.map((msg) => (
-                    <Bubble
+                    <XBubble
                         key={msg.id}
                         placement={msg.role === 'user' ? 'end' : 'start'}
                         content={msg.content}
-                        // @ts-ignore
                         avatar={{
                             icon: msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />,
                             style: { backgroundColor: msg.role === 'user' ? '#1890ff' : '#52c41a' }
