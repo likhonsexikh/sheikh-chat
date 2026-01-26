@@ -54,7 +54,7 @@ const ChatInterface: React.FC = () => {
             () => {
                 // Finished
             },
-            (err) => {
+            (_err) => {
                 message.error("Failed to generate response");
                 setMessages(prev => prev.map(m =>
                     m.id === aiMsgId ? { ...m, content: "Sorry, something went wrong." } : m
@@ -90,6 +90,7 @@ const ChatInterface: React.FC = () => {
                         key={msg.id}
                         placement={msg.role === 'user' ? 'end' : 'start'}
                         content={msg.content}
+                        // @ts-ignore
                         avatar={{
                             icon: msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />,
                             style: { backgroundColor: msg.role === 'user' ? '#1890ff' : '#52c41a' }
