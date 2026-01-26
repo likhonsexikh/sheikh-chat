@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions/v1';
 import * as admin from 'firebase-admin';
 import express from 'express';
 import cors from 'cors';
@@ -46,20 +46,23 @@ function checkRateLimit(userId: string): boolean {
 }
 
 // Secure Gemini API endpoint
-app.post('/api/gemini/chat', async (req, res) => {
+app.post('/gemini/chat', async (req: express.Request, res: express.Response) => {
     try {
         const { messages, userId } = req.body;
 
         if (!userId) {
-            return res.status(400).json({ error: 'User ID is required' });
+            res.status(400).json({ error: 'User ID is required' });
+            return;
         }
 
         if (!checkRateLimit(userId)) {
-            return res.status(429).json({ error: 'Rate limit exceeded' });
+            res.status(429).json({ error: 'Rate limit exceeded' });
+            return;
         }
 
         if (!messages || !Array.isArray(messages)) {
-            return res.status(400).json({ error: 'Invalid messages format' });
+            res.status(400).json({ error: 'Invalid messages format' });
+            return;
         }
 
         // Validate and sanitize messages
@@ -108,7 +111,7 @@ app.post('/api/gemini/chat', async (req, res) => {
 });
 
 // Get conversation history
-app.get('/api/conversations/:userId', async (req, res) => {
+app.get('/conversations/:userId', async (req: express.Request, res: express.Response) => {
     try {
         const { userId } = req.params;
         const { limit = 10 } = req.query;
@@ -133,7 +136,7 @@ app.get('/api/conversations/:userId', async (req, res) => {
 });
 
 // Delete conversation
-app.delete('/api/conversations/:userId/:conversationId', async (req, res) => {
+app.delete('/conversations/:userId/:conversationId', async (req: express.Request, res: express.Response) => {
     try {
         const { userId, conversationId } = req.params;
 
@@ -151,7 +154,7 @@ app.delete('/api/conversations/:userId/:conversationId', async (req, res) => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/health', (req: express.Request, res: express.Response) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
@@ -161,7 +164,7 @@ export const api = functions.https.onRequest(app);
 // Scheduled cleanup function to remove old conversations (older than 30 days)
 export const cleanupOldConversations = functions.pubsub.schedule('0 2 * * *')
     .timeZone('Asia/Dhaka')
-    .onRun(async (context) => {
+    .onRun(async (context: functions.EventContext) => {
         const thirtyDaysAgo = admin.firestore.Timestamp.fromDate(
             new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
         );

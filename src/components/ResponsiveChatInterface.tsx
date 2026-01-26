@@ -212,7 +212,7 @@ const ResponsiveChatInterface: React.FC = () => {
                     // The conversation is automatically updated via real-time listener
                 }
             },
-            (err) => {
+            () => {
                 message.error("Failed to generate response");
                 setMessages(prev => prev.map(m =>
                     m.id === aiMsgId ? { ...m, content: "Sorry, something went wrong. Please try again." } : m
