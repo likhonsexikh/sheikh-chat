@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Bubble, Sender } from '@ant-design/x';
-import { UserOutlined, RobotOutlined, LogoutOutlined, HistoryOutlined, DeleteOutlined, ReloadOutlined, MenuOutlined, CloseOutlined, ExpandOutlined, CompressOutlined } from '@ant-design/icons';
-import { Layout, Button, message, theme, Modal, List, Typography, Space, Dropdown, Menu, Spin, Empty, Drawer, Tooltip, Badge } from 'antd';
+import { UserOutlined, RobotOutlined, LogoutOutlined, HistoryOutlined, DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Layout, Button, message, theme, Modal, List, Typography, Space, Dropdown, Spin, Empty } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 import { useGemini } from '../hooks/useGemini';
 import { collection, query, orderBy, limit, getDocs, doc, deleteDoc, onSnapshot } from 'firebase/firestore';
@@ -118,7 +118,7 @@ const EnhancedChatInterface: React.FC = () => {
                     // The conversation is automatically updated via real-time listener
                 }
             },
-            (err) => {
+            (_err) => {
                 message.error("Failed to generate response");
                 setMessages(prev => prev.map(m =>
                     m.id === aiMsgId ? { ...m, content: "Sorry, something went wrong. Please try again." } : m
@@ -280,10 +280,7 @@ const EnhancedChatInterface: React.FC = () => {
                             key={msg.id}
                             placement={msg.role === 'user' ? 'end' : 'start'}
                             content={msg.content}
-                            avatar={{
-                                children: msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />,
-                                style: { backgroundColor: msg.role === 'user' ? '#1890ff' : '#52c41a' }
-                            }}
+                            avatar={msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />}
                             style={{ maxWidth: '70%' }}
                         />
                     ))}

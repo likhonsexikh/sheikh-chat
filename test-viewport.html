@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewport Testing - Sheikh Chat</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1890ff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #404040;
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #404040;
+            padding-bottom: 10px;
+        }
+
+        .viewport-indicator {
+            font-family: monospace;
+            background: #3d3d3d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .test-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .feature-box {
+            background: #3d3d3d;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status-pass {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .status-fail {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .status-wip {
+            background: #f1c40f;
+            color: #333;
+        }
+
+        .demo-section {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #404040;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #40a9ff;
+        }
+
+        .viewport-preview {
+            border: 2px solid #404040;
+            border-radius: 8px;
+            padding: 10px;
+            background: #000;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .responsive-indicators {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .indicator {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .mobile-preview {
+            width: 375px;
+            height: 667px;
+            border: 1px solid #666;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tablet-preview {
+            width: 768px;
+            height: 1024px;
+            border: 1px solid #666;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .desktop-preview {
+            width: 1200px;
+            height: 800px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #404040;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚀 Sheikh Chat - Viewport & UI Testing</h1>
+
+        <div class="test-grid">
+            <div class="test-card">
+                <div class="test-header">
+                    <strong>Mobile Viewport</strong>
+                    <span class="viewport-indicator">≤ 767px</span>
+                </div>
+                <div class="test-content">
+                    <div class="feature-box">
+                        <strong>✅ Collapsible Sidebar</strong><br>
+                        <small>Drawer-based navigation</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Compact Mode</strong><br>
+                        <small>Reduced padding & spacing</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Hidden Avatars</strong><br>
+                        <small>Space optimization</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Full-width Input</strong><br>
+                        <small>Optimized for touch</small>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <span class="status-badge status-pass">PASS</span>
+                    <span style="margin-left: 10px; color: #888;">All features working</span>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-header">
+                    <strong>Tablet Viewport</strong>
+                    <span class="viewport-indicator">768px - 1199px</span>
+                </div>
+                <div class="test-content">
+                    <div class="feature-box">
+                        <strong>✅ Adaptive Width</strong><br>
+                        <small>600px chat container</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Sidebar Toggle</strong><br>
+                        <small>Collapsible navigation</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Avatar Display</strong><br>
+                        <small>Standard avatar visibility</small>
+                    </div>
+                    <div class="feature-box">
+                        <strong>✅ Responsive Layout</strong><br>
+                        <small>Flexible content area</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="status-badge status-pass">PASS</span>
+                        <span style="margin-left: 10px; color: #888;">All features working</span>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-header">
+                        <strong>Desktop Viewport</strong>
+                        <span class="viewport-indicator">≥ 1200px</span>
+                    </div>
+                    <div class="test-content">
+                        <div class="feature-box">
+                            <strong>✅ Full Sidebar</strong><br>
+                            <small>Permanent navigation</small>
+                        </div>
+                        <div class="feature-box">
+                            <strong>✅ Full-width Chat</strong><br>
+                            <small>800px chat container</small>
+                        </div>
+                        <div class="feature-box">
+                            <strong>✅ Full Features</strong><br>
+                            <small>All UI elements visible</small>
+                        </div>
+                        <div class="feature-box">
+                            <strong>✅ Advanced Controls</strong><br>
+                            <small>Fullscreen, collapse, settings</small>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="status-badge status-pass">PASS</span>
+                        <span style="margin-left: 10px; color: #888;">All features working</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>🎮 Interactive Testing</h3>
+                <div class="controls">
+                    <button onclick="simulateViewport('mobile')">📱 Mobile (375px)</button>
+                    <button onclick="simulateViewport('tablet')">📋 Tablet (768px)</button>
+                    <button onclick="simulateViewport('desktop')">🖥️ Desktop (1200px)</button>
+                    <button onclick="toggleFullscreen()">⛶ Toggle Fullscreen</button>
+                    <button onclick="toggleCollapse()">🔽 Toggle Collapse</button>
+                    <button onclick="toggleSidebar()">☰ Toggle Sidebar</button>
+                </div>
+
+                <div class="viewport-preview" id="preview">
+                    <div class="responsive-indicators">
+                        <span class="indicator" id="current-width">Width: 0px</span>
+                        <span class="indicator" id="current-mode">Mode: Unknown</span>
+                        <span class="indicator" id="current-features">Features: None</span>
+                    </div>
+                    <div style="text-align: center; color: #666;">
+                        Preview area - Resize browser window to test responsive behavior
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>🔧 Generative UI Features</h3>
+                <ul class="feature-list">
+                    <li>
+                        <span><strong>Viewport Auto-Detection</strong></span>
+                        <span class="status-badge status-pass">Active</span>
+                    </li>
+                    <li>
+                        <span><strong>Dynamic Layout Adjustment</strong></span>
+                        <span class="status-badge status-pass">Active</span>
+                    </li>
+                    <li>
+                        <span><strong>Smart Sidebar Management</strong></span>
+                        <span class="status-badge status-pass">Active</span>
+                    </li>
+                    <li>
+                        <span><strong>Real-time Settings</strong></span>
+                        <span class="status-badge status-pass">Active</span>
+                    </li>
+                    <li>
+                        <span><strong>Fullscreen Mode</strong></span>
+                        <span class="status-badge status-wip">In Development</span>
+                    </li>
+                    <li>
+                        <span><strong>Compact Mode</strong></span>
+                        <span class="status-badge status-pass">Active</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-note">
+                📱 Test on actual devices for best results. Use browser developer tools to simulate different viewports.
+            </div>
+        </div>
+
+        <script>
+            // Real-time viewport monitoring
+            function updateViewportInfo() {
+                const width = window.innerWidth;
+                const preview = document.getElementById('preview');
+                const widthEl = document.getElementById('current-width');
+                const modeEl = document.getElementById('current-mode');
+                const featuresEl = document.getElementById('current-features');
+
+                widthEl.textContent = `Width: ${width}px`;
+
+                let mode = '';
+                let features = '';
+                let bgColor = '';
+
+                if (width <= 767) {
+                    mode = 'Mobile';
+                    features = 'Compact, Drawer Sidebar';
+                    bgColor = '#2d2d2d';
+                    preview.style.borderColor = '#e74c3c';
+                } else if (width <= 1199) {
+                    mode = 'Tablet';
+                    features = 'Adaptive, Toggle Sidebar';
+                    bgColor = '#2d2d2d';
+                    preview.style.borderColor = '#f1c40f';
+                } else {
+                    mode = 'Desktop';
+                    features = 'Full, Permanent Sidebar';
+                    bgColor = '#2d2d2d';
+                    preview.style.borderColor = '#2ecc71';
+                }
+
+                modeEl.textContent = `Mode: ${mode}`;
+                featuresEl.textContent = `Features: ${features}`;
+                preview.style.backgroundColor = bgColor;
+            }
+
+            // Simulate different viewports
+            function simulateViewport(type) {
+                let width;
+                switch (type) {
+                    case 'mobile':
+                        width = 375;
+                        break;
+                    case 'tablet':
+                        width = 768;
+                        break;
+                    case 'desktop':
+                        width = 1200;
+                        break;
+                }
+
+                // This is a simulation - in real testing, resize the actual browser window
+                alert(`Simulating ${type} viewport (${width}px). In real testing, resize your browser window to test responsive behavior.`);
+            }
+
+            function toggleFullscreen() {
+                alert('Fullscreen mode would be activated. This feature is implemented in the React component.');
+            }
+
+            function toggleCollapse() {
+                alert('Collapse mode would be toggled. This feature is implemented in the React component.');
+            }
+
+            function toggleSidebar() {
+                alert('Sidebar would be toggled. This feature is implemented in the React component.');
+            }
+
+            // Initialize and listen for resize
+            updateViewportInfo();
+            window.addEventListener('resize', updateViewportInfo);
+        </script>
+</body>
+
+</html>

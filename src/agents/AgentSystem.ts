@@ -1,4 +1,4 @@
-import type { Message, AgentTask, Agent } from '../types';
+import type { AgentTask, Agent } from '../types';
 
 export class ResearchAgent implements Agent {
     id = 'research';
