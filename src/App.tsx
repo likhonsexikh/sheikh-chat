@@ -2,8 +2,8 @@ import React from 'react';
 import { ConfigProvider, theme } from 'antd';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './components/Login';
-import ChatInterface from './components/ChatInterface';
-import './App.css'; // Ensure we keep standard styles if any, or remove if not needed.
+import EnhancedChatInterface from './components/EnhancedChatInterface';
+import './App.css';
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
@@ -12,7 +12,7 @@ const AppContent: React.FC = () => {
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#000', color: '#fff' }}>Loading...</div>;
   }
 
-  return user ? <ChatInterface /> : <Login />;
+  return user ? <EnhancedChatInterface /> : <Login />;
 };
 
 const App: React.FC = () => {
